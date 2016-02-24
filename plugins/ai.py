@@ -58,10 +58,10 @@ def ai_sieve(paraml, input=None, notice=None, db=None, bot=None, nick=None, conn
     # process all aif
 
     # process uguu ai
-
+    print server
     for pattern in responses:
         wildcards = []
-        match = pattern[0].replace('{name}', bot.config['connections'][server.title()]['user'].lower())
+        match = pattern[0].replace('{name}', bot.config['connections']["AIM"]['user'].lower())
         if re.match(match, input.msg.lower()):
             # print "Matched: {}".format(pattern[0])
             wildcards = filter(bool, re.split(pattern[0], input.msg.lower()))
@@ -69,7 +69,7 @@ def ai_sieve(paraml, input=None, notice=None, db=None, bot=None, nick=None, conn
             wildcards = [' '.join(pronouns.get(word, word) for word in wildcard.split()) for wildcard in wildcards]
 
             response = random.choice(pattern[1])
-            response = response.replace('{nick}',input.nick).replace('{name}', bot.config['connections'][server.title()]['user'].lower())
+            response = response.replace('{nick}',input.nick).replace('{name}', bot.config['connections']["AIM"]['user'].lower())
             response = response.format(*wildcards)
             full_reply+=response+' '
             return full_reply

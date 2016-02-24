@@ -10,8 +10,10 @@ class Input(dict):
                     nick, user, host, mask, paraml, msg):
 
         chan = paraml[0].lower()
+        #print 'Channel:'+chan
         if chan == conn.nick.lower():  # is a PM
             chan = nick
+            #print 'Chan to nick'
 
         def say(msg):
             conn.msg(chan, msg)
@@ -160,10 +162,10 @@ def main(conn, out):
 
     if inp.command == 'PRIVMSG':
         # COMMANDS
-        if inp.chan == inp.nick:  # private message, no command prefix
-            prefix = '^(?:[%s]?|' % command_prefix
-        else:
-            prefix = '^(?:[%s]|' % command_prefix
+        #if inp.chan == inp.nick:  # private message, no command prefix
+        #    prefix = '^(?:[%s]?|' % command_prefix
+        #else:
+        prefix = '^(?:[%s]|' % command_prefix
 
         command_re = prefix + inp.conn.nick
         command_re += r'[,;:]+\s+)(\w+)(?:$|\s+)(.*)'

@@ -55,19 +55,25 @@ print 'Connecting to IRC...'
 
 bot.conns = {}
 
-try:
-    for name, conf in bot.config['connections'].iteritems():
-        print 'Connecting to server: %s' % conf['server']
-        if conf.get('ssl'):
-            bot.conns[name] = SSLIRC(name, conf['server'], conf['nick'], conf=conf,
-                    port=conf.get('port', 6667), channels=conf['channels'],
-                    ignore_certificate_errors=conf.get('ignore_cert', True))
-        else:
-            bot.conns[name] = IRC(name, conf['server'], conf['nick'], conf=conf,
-                    port=conf.get('port', 6667), channels=conf['channels'])
-except Exception as e:
-    print 'ERROR: malformed config file', e
-    sys.exit()
+for name, conf in bot.config['connections'].iteritems():
+    print 'Connecting to server: %s' % conf['server']
+    if conf.get('ssl'):
+        bot.conns[name] = SSLIRC(name, conf['server'], conf['nick'], conf=conf,
+                port=conf.get('port', 6667), channels=conf['channels'],
+                ignore_certificate_errors=conf.get('ignore_cert', True))
+    elif conf.get('screenname'):
+        # AOL
+        print 'Creating ingo connection'
+        bot.conns[name] = INGO(name, conf['server'],
+                            port=conf.get('port', 8070),
+                            screenname=conf['screenname'],
+                            password=conf['password'],
+                            channels=conf['channels'],
+                            conf=conf)
+        print 'Ingo connection created'
+    else:
+        bot.conns[name] = IRC(name, conf['server'], conf['nick'], conf=conf,
+                port=conf.get('port', 6667), channels=conf['channels'])
 
 bot.persist_dir = os.path.abspath('persist')
 if not os.path.exists(bot.persist_dir):
@@ -82,6 +88,8 @@ while True:
     for conn in bot.conns.itervalues():
         try:
             out = conn.out.get_nowait()
+            #print 'parsing command'
+            #print out
             main(conn, out)
         except Queue.Empty:
             pass

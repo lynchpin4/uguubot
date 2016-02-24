@@ -175,6 +175,8 @@ class IRC(object):
             # put the parsed message in the response queue
             self.out.put([msg, prefix, command, params, nick, user, host,
                     mask, paramlist, lastparam])
+            print([msg, prefix, command, params, nick, user, host,
+                    mask, paramlist, lastparam])
             # if the server pings us, pong them back
             if command == "PING":
                 self.cmd("PONG", paramlist)
