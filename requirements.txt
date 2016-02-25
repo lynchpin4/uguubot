@@ -12,3 +12,4 @@ mygengo
 pytz>=2013b
 timezones
 pycrypto
+ws4py
